@@ -1,5 +1,6 @@
 package com.family.parentalcontrol.services;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -167,7 +168,7 @@ public class CallSmsService extends Service {
         return this.checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
     }
 
-    private NotificationCompat.Notification createNotification() {
+    private Notification createNotification() {
         return new NotificationCompat.Builder(this, "call_sms_channel")
                 .setContentTitle("Call & SMS Monitoring Active")
                 .setContentText("Call logs and text messages are accessible to parent")

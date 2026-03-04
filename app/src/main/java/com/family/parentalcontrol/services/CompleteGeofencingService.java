@@ -1,5 +1,6 @@
 package com.family.parentalcontrol.services;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -152,7 +153,7 @@ public class CompleteGeofencingService extends Service {
         }
     }
 
-    private NotificationCompat.Notification createNotification() {
+    private Notification createNotification() {
         return new NotificationCompat.Builder(this, "geofence_channel")
                 .setContentTitle("Geofence Monitoring Active")
                 .setContentText("Monitoring safe zones: Home, School, Park")

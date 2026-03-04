@@ -15,10 +15,9 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.PathOverlay;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.PathOverlay;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -91,8 +90,9 @@ public class CompleteLocationTrackerActivity extends AppCompatActivity {
 
             // Create overlay items for each location
             List<OverlayItem> items = new ArrayList<>();
-            PathOverlay pathOverlay = new PathOverlay();
+            Polyline pathOverlay = new Polyline();
             pathOverlay.setColor(0xff0000ff); // Blue path
+            List<GeoPoint> pathPoints = new ArrayList<>();
 
             for (int i = 0; i < locationHistory.size(); i++) {
                 Location loc = locationHistory.get(i);
@@ -105,9 +105,11 @@ public class CompleteLocationTrackerActivity extends AppCompatActivity {
                 items.add(item);
                 
                 if (i > 0) {
-                    pathOverlay.addPoint(point);
+                    pathPoints.add(point);
                 }
             }
+
+            pathOverlay.setPoints(pathPoints);
 
             // Add the last location as center point
             if (!locationHistory.isEmpty()) {
