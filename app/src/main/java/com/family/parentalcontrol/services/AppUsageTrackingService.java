@@ -65,7 +65,7 @@ public class AppUsageTrackingService extends Service {
 
             if (usageStatsManager != null) {
                 List<UsageStats> stats = usageStatsManager.queryUsageStats(
-                        UsageStatsManager.INTERVAL_HOURLY, startTime, endTime);
+                        UsageStatsManager.INTERVAL_DAILY, startTime, endTime);
 
                 if (stats != null) {
                     for (UsageStats stat : stats) {

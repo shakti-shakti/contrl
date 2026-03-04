@@ -3,8 +3,8 @@ package com.family.parentalcontrol.services;
 import android.app.Service;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.IBinder;
-import android.provider.Browser;
 import android.util.Log;
 
 import com.family.parentalcontrol.utils.SupabaseClient;
@@ -13,6 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BrowserHistoryService extends Service {
+    private static final Uri BOOKMARKS_URI = Uri.parse("content://browser/bookmarks");
+    private static final String URL = "url";
+    private static final String TITLE = "title";
+    private static final String DATE = "date";
+    private static final String BOOKMARK = "bookmark";
     private static final String TAG = "BrowserHistorySvc";
     private SupabaseClient supabaseClient;
 
@@ -26,11 +31,11 @@ public class BrowserHistoryService extends Service {
     private void fetchAndUploadHistory() {
         try {
             Cursor cursor = getContentResolver().query(
-                    Browser.BOOKMARKS_URI,
-                    new String[]{Browser.BookmarkColumns.URL, Browser.BookmarkColumns.TITLE, Browser.BookmarkColumns.DATE},
-                    Browser.BookmarkColumns.BOOKMARK + "=0", // history only
+                    BOOKMARKS_URI,
+                    new String[]{URL, TITLE, DATE},
+                    BOOKMARK + "=0", // history only
                     null,
-                    Browser.BookmarkColumns.DATE + " DESC LIMIT 50");
+                    DATE + " DESC LIMIT 50");
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     String url = cursor.getString(0);

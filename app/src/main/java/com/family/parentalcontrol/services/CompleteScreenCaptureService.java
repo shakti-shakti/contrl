@@ -81,9 +81,9 @@ public class CompleteScreenCaptureService extends Service {
             // Create media record for Supabase
             Media media = new Media();
             media.setChildId(childId);
-            media.setMediaType("screenshot");
-            media.setStoragePath("screenshots/" + fileName);
-            media.setTimestamp(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).format(new Date()));
+            media.setType("screenshot");
+            media.setFilePath("screenshots/" + fileName);
+            media.setTimestamp(System.currentTimeMillis());
 
             // send metadata record to Supabase
             supabaseClient.saveMedia(childId, "screenshot", "screenshots/" + fileName, new SupabaseClient.SupabaseCallback<Boolean>() {

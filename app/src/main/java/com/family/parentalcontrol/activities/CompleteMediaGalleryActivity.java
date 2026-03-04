@@ -71,10 +71,9 @@ public class CompleteMediaGalleryActivity extends AppCompatActivity {
                 if (files != null) {
                     for (java.io.File file : files) {
                         Media media = new Media();
-                        media.setStoragePath(file.getAbsolutePath());
-                        media.setMediaType(file.getName().endsWith(".mp4") ? "video" : "photo");
-                        media.setTimestamp(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(
-                            new java.util.Date(file.lastModified())));
+                        media.setFilePath(file.getAbsolutePath());
+                        media.setType(file.getName().endsWith(".mp4") ? "video" : "photo");
+                        media.setTimestamp(file.lastModified());
                         mediaList.add(media);
                     }
                     

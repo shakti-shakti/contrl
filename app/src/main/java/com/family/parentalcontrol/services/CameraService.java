@@ -10,6 +10,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.family.parentalcontrol.R;
+import com.family.parentalcontrol.utils.SupabaseClient;
 
 /**
  * CameraService allows parent to remotely capture photo/video

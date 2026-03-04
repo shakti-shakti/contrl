@@ -121,7 +121,7 @@ public class CommandService extends Service {
                 stopService(new Intent(this, LocationTrackingService.class));
                 break;
             case "block_app": {
-                String pkg = cmd.getParameters() != null ? (String) cmd.getParameters().get("package") : null;
+                String pkg = cmd.getParameters();
                 if (pkg != null) {
                     new com.family.parentalcontrol.utils.BlockedAppsHelper(CommandService.this)
                             .blockApp(pkg);
@@ -130,7 +130,7 @@ public class CommandService extends Service {
                 break;
             }
             case "unblock_app": {
-                String pkg = cmd.getParameters() != null ? (String) cmd.getParameters().get("package") : null;
+                String pkg = cmd.getParameters();
                 if (pkg != null) {
                     new com.family.parentalcontrol.utils.BlockedAppsHelper(CommandService.this)
                             .unblockApp(pkg);

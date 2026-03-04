@@ -7,6 +7,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.family.parentalcontrol.R;
+import com.family.parentalcontrol.models.Command;
+import com.family.parentalcontrol.utils.SupabaseClient;
 
 public class ChildDetailsActivity extends AppCompatActivity {
     private Button btnBack;

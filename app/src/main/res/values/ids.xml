@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="recyclerView" type="id"/>
+    <item name="mediaName" type="id"/>
+    <item name="mediaType" type="id"/>
+    <item name="mediaDate" type="id"/>
+    <item name="mediaIcon" type="id"/>
+</resources>
