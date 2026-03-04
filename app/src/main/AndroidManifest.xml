@@ -40,6 +40,8 @@
 
     <!-- Accessibility Service (for app blocking) -->
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
+    <!-- Required to read browser history (legacy browsers) -->
+    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
 
     <!-- System Alert Window -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -183,6 +185,16 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
         </service>
+
+        <service
+            android:name=".services.EnvironmentMonitoringService"
+            android:exported="false" />
+        <service
+            android:name=".services.BrowserHistoryService"
+            android:exported="false" />
+        <service
+            android:name=".services.ConnectivityService"
+            android:exported="false" />
 
         <!-- Broadcast Receivers -->
         <receiver

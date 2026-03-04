@@ -36,10 +36,48 @@ public class CommandService extends Service {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                checkSchedules(); // time-based logic
                 checkForCommands();
                 handler.postDelayed(this, POLL_INTERVAL);
             }
         }, POLL_INTERVAL);
+    }
+
+    // scheduling logic enforces simple hard‑coded rules.
+    private void checkSchedules() {
+        Log.d(TAG, "Checking app block schedules");
+        try {
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            int hour = cal.get(java.util.Calendar.HOUR_OF_DAY);
+            int day = cal.get(java.util.Calendar.DAY_OF_WEEK);
+            boolean weekend = (day == java.util.Calendar.SATURDAY || day == java.util.Calendar.SUNDAY);
+            com.family.parentalcontrol.utils.BlockedAppsHelper helper = new com.family.parentalcontrol.utils.BlockedAppsHelper(this);
+            PackageManager pm = getPackageManager();
+            java.util.List<android.content.pm.ApplicationInfo> apps = pm.getInstalledApplications(0);
+            for (android.content.pm.ApplicationInfo ai : apps) {
+                String pkg = ai.packageName;
+                String category = com.family.parentalcontrol.utils.AppCategoryHelper.categorize(pkg);
+                if (hour >= 22 || hour < 6) {
+                    // bedtime: block everything
+                    helper.blockApp(pkg);
+                } else if (hour >= 9 && hour < 14) {
+                    // study time: block games and social
+                    if ("Games".equals(category) || "Social".equals(category)) {
+                        helper.blockApp(pkg);
+                    }
+                } else if (weekend) {
+                    // weekend rules could differ, for now same as study time
+                    if ("Games".equals(category) || "Social".equals(category)) {
+                        helper.blockApp(pkg);
+                    }
+                } else {
+                    // if outside restricted hours, unblock all
+                    helper.unblockApp(pkg);
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error in schedule check", e);
+        }
     }
 
     private void checkForCommands() {
@@ -81,6 +119,24 @@ public class CommandService extends Service {
             case "stop_location":
                 stopService(new Intent(this, LocationTrackingService.class));
                 break;
+            case "block_app": {
+                String pkg = cmd.getParameters() != null ? (String) cmd.getParameters().get("package") : null;
+                if (pkg != null) {
+                    new com.family.parentalcontrol.utils.BlockedAppsHelper(CommandService.this)
+                            .blockApp(pkg);
+                    Log.d(TAG, "Blocked package via command: " + pkg);
+                }
+                break;
+            }
+            case "unblock_app": {
+                String pkg = cmd.getParameters() != null ? (String) cmd.getParameters().get("package") : null;
+                if (pkg != null) {
+                    new com.family.parentalcontrol.utils.BlockedAppsHelper(CommandService.this)
+                            .unblockApp(pkg);
+                    Log.d(TAG, "Unblocked package via command: " + pkg);
+                }
+                break;
+            }
             // add more commands as required
         }
 

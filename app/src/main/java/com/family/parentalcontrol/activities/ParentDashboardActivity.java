@@ -54,6 +54,9 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
         // Click listeners
         btnAddChild.setOnClickListener(v -> showAddChildDialog());
+
+    
+
         btnSettings.setOnClickListener(v -> {
             startActivity(new Intent(this, SettingsActivity.class));
         });
@@ -74,15 +77,33 @@ public class ParentDashboardActivity extends AppCompatActivity {
     }
 
     private void loadChildren() {
-        // TODO: Load children from Supabase and update adapter
         childrenList.clear();
-        
-        // placeholder: if list empty show message
+        SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
+        String parentId = prefs.getString("parent_id", "");
+        if (!parentId.isEmpty()) {
+            supabaseClient.getChildrenForParent(parentId, new SupabaseClient.SupabaseCallback<java.util.List<java.util.Map<String, Object>>>() {
+                @Override
+                public void onSuccess(java.util.List<java.util.Map<String, Object>> result) {
+                    for (java.util.Map<String, Object> map : result) {
+                        Child child = new Child();
+                        child.setId((String) map.get("child_id"));
+                        child.setName((String) map.get("child_name"));
+                        child.setAge(((Number) map.get("child_age")).intValue());
+                        childrenList.add(child);
+                    }
+                    childrenAdapter.notifyDataSetChanged();
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.e(TAG, "Failed to load children", e);
+                }
+            });
+        }
+
         if (childrenList.isEmpty()) {
             Toast.makeText(this, "No children added yet. Click 'Add Child' to pair a device.", 
                     Toast.LENGTH_LONG).show();
         }
-        childrenAdapter.notifyDataSetChanged();
     }
 
     private void showAddChildDialog() {
@@ -90,8 +111,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
         builder.setTitle("Add Child Device");
         builder.setMessage("Choose pairing method:\n1. Scan QR Code\n2. Manual Entry");
         builder.setPositiveButton("Scan QR", (dialog, which) -> {
-            Toast.makeText(this, "QR Scanner - Coming soon", Toast.LENGTH_SHORT).show();
-            // TODO: Implement QR scanning
+            startActivity(new Intent(ParentDashboardActivity.this, QRGeneratorActivity.class));
         });
         builder.setNegativeButton("Manual Entry", (dialog, which) -> {
             Toast.makeText(this, "Manual pairing - Coming soon", Toast.LENGTH_SHORT).show();

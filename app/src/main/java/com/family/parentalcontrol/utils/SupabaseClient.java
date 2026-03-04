@@ -11,6 +11,9 @@ import com.google.gson.GsonBuilder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
+import java.util.Locale;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -449,6 +452,59 @@ public class SupabaseClient {
                 callback.onError(new Exception(t));
             }
         });
+    }
+
+    // ============ MEDIA HANDLING ============
+    public void saveMedia(String childId, String mediaType, String storagePath, SupabaseCallback<Boolean> callback) {
+        Map<String, Object> media = new HashMap<>();
+        media.put("child_id", childId);
+        media.put("media_type", mediaType);
+        media.put("storage_path", storagePath);
+        media.put("timestamp", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).format(new Date()));
+
+        api.saveMedia(media).enqueue(new Callback<Map<String, Object>>() {
+            @Override
+            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                callback.onSuccess(response.isSuccessful());
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                callback.onError(new Exception(t));
+            }
+        });
+    }
+
+    // ============ STORAGE UPLOAD ============
+    /**
+     * Upload raw bytes to Supabase storage bucket.
+     */
+    public void uploadFile(String bucket, String targetPath, byte[] fileBytes, SupabaseCallback<Boolean> callback) {
+        try {
+            String url = SUPABASE_URL + "/storage/v1/object/" + bucket + "/" + targetPath;
+            okhttp3.RequestBody body = okhttp3.RequestBody.create(fileBytes, okhttp3.MediaType.parse("application/octet-stream"));
+            okhttp3.Request request = new okhttp3.Request.Builder()
+                    .url(url)
+                    .header("apikey", SUPABASE_KEY)
+                    .header("Authorization", "Bearer " + SUPABASE_KEY)
+                    .put(body)
+                    .build();
+            // use httpClient from buildRetrofitClient? build new one
+            OkHttpClient client = new OkHttpClient();
+            client.newCall(request).enqueue(new okhttp3.Callback() {
+                @Override
+                public void onFailure(okhttp3.Call call, IOException e) {
+                    callback.onError(e);
+                }
+
+                @Override
+                public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                    callback.onSuccess(response.isSuccessful());
+                }
+            });
+        } catch (Exception e) {
+            callback.onError(e);
+        }
     }
 
     // ============ ALERTS ============

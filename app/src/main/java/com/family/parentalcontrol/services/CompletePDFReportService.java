@@ -112,7 +112,17 @@ public class CompletePDFReportService extends Service {
 
             Log.d(TAG, "Daily report generated: " + reportFile.getAbsolutePath());
 
-            // TODO: Upload report to Supabase storage or attach to parent notification
+            // save report record to Supabase media table
+            supabaseClient.saveMedia(childId, "report", "reports/" + fileName, new SupabaseClient.SupabaseCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    Log.d(TAG, "Daily report metadata saved");
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.e(TAG, "Failed to save daily report metadata", e);
+                }
+            });
 
         } catch (Exception e) {
             Log.e(TAG, "Error generating daily report", e);
@@ -182,8 +192,16 @@ public class CompletePDFReportService extends Service {
 
             Log.d(TAG, "Weekly report generated: " + reportFile.getAbsolutePath());
 
-            // TODO: Upload report to Supabase storage or send to parent
-
+            supabaseClient.saveMedia(childId, "report", "reports/" + fileName, new SupabaseClient.SupabaseCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    Log.d(TAG, "Weekly report metadata saved");
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.e(TAG, "Failed to save weekly report metadata", e);
+                }
+            });
         } catch (Exception e) {
             Log.e(TAG, "Error generating weekly report", e);
         }

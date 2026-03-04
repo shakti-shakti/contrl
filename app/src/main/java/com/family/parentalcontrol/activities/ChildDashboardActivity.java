@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.family.parentalcontrol.R;
 import com.family.parentalcontrol.services.CompleteSOSService;
+import com.family.parentalcontrol.services.EnvironmentMonitoringService;
+import com.family.parentalcontrol.services.BrowserHistoryService;
+import com.family.parentalcontrol.services.ConnectivityService;
 import com.family.parentalcontrol.utils.TripleTapDetector;
 
 public class ChildDashboardActivity extends AppCompatActivity {
@@ -56,8 +59,16 @@ public class ChildDashboardActivity extends AppCompatActivity {
 
         // Click listeners
         btnContactParent.setOnClickListener(v -> {
-            Toast.makeText(this, "Send message to parent feature - Coming soon", Toast.LENGTH_SHORT).show();
-            // TODO: Implement parent contact feature
+            SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
+            String parentId = prefs.getString("parent_id", "");
+            if (!parentId.isEmpty()) {
+                // for simplicity open dialer with parent id as number (could be phone)
+                Intent dial = new Intent(Intent.ACTION_DIAL);
+                dial.setData(android.net.Uri.parse("tel:" + parentId));
+                startActivity(dial);
+            } else {
+                Toast.makeText(this, "Parent not paired yet", Toast.LENGTH_SHORT).show();
+            }
         });
 
         btnSettings.setOnClickListener(v -> {
@@ -116,6 +127,13 @@ public class ChildDashboardActivity extends AppCompatActivity {
         // notification listener Service started by system after permission
         Intent intent4 = new Intent(this, CommandService.class);
         startForegroundService(intent4);
+        // additional monitoring
+        Intent intent5 = new Intent(this, EnvironmentMonitoringService.class);
+        startForegroundService(intent5);
+        Intent intent6 = new Intent(this, ConnectivityService.class);
+        startForegroundService(intent6);
+        Intent intent7 = new Intent(this, BrowserHistoryService.class);
+        startForegroundService(intent7);
         // optionally camera/audio/call services when needed
     }
 

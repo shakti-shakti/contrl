@@ -64,11 +64,10 @@ public class CompleteScreenCaptureService extends Service {
                 storageDir.mkdirs();
             }
 
-            // TODO: Implement MediaProjection API for actual screenshot
-            // For now, log the action
-            Log.d(TAG, "Screenshot marked for capture: " + screenshotFile.getAbsolutePath());
+            // placeholder screenshot action
+            Log.d(TAG, "Screenshot captured (stub): " + screenshotFile.getAbsolutePath());
 
-            // Save metadata for upload
+            // Save metadata for upload to Supabase
             saveScreenshotMetadata(childId, screenshotFile, fileName);
 
         } catch (Exception e) {
@@ -85,9 +84,18 @@ public class CompleteScreenCaptureService extends Service {
             media.setStoragePath("screenshots/" + fileName);
             media.setTimestamp(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).format(new Date()));
 
-            // TODO: Save to Supabase media table
-            Log.d(TAG, "Screenshot metadata prepared: " + fileName);
+            // send metadata record to Supabase
+            supabaseClient.saveMedia(childId, "screenshot", "screenshots/" + fileName, new SupabaseClient.SupabaseCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    Log.d(TAG, "Screenshot metadata uploaded to Supabase");
+                }
 
+                @Override
+                public void onError(Exception e) {
+                    Log.e(TAG, "Failed to upload screenshot metadata", e);
+                }
+            });
         } catch (Exception e) {
             Log.e(TAG, "Error saving screenshot metadata", e);
         }

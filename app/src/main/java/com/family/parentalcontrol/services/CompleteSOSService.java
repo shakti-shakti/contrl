@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class CompleteSOS Service extends Service {
+public class CompleteSOSService extends Service {
     private static final String TAG = "SOSService";
     private static final long EMERGENCY_LOCATION_INTERVAL = 10000; // 10 seconds
     private Handler handler;
@@ -94,7 +94,16 @@ public class CompleteSOS Service extends Service {
                     .format(new Date());
 
             Log.d(TAG, "Sending SOS alert to parent for child: " + childId);
-            // TODO: Call SupabaseClient.createAlert() with alert_type='SOS'
+            supabaseClient.createAlert(childId, "SOS", "Emergency SOS activated", new SupabaseClient.SupabaseCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    Log.d(TAG, "SOS alert recorded on Supabase");
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.e(TAG, "Failed to record SOS alert", e);
+                }
+            });
 
         } catch (Exception e) {
             Log.e(TAG, "Error sending SOS alert", e);
@@ -155,7 +164,31 @@ public class CompleteSOS Service extends Service {
     private void sendEmergencyLocation(String childId) {
         try {
             Log.d(TAG, "Sending emergency location to parent (every 10s)");
-            // TODO: Call LocationTrackingService to send location immediately
+            // quick one-shot location fetch
+            com.google.android.gms.location.FusedLocationProviderClient client =
+                    com.google.android.gms.location.LocationServices.getFusedLocationProviderClient(CompleteSOSService.this);
+            try {
+                client.getLastLocation().addOnSuccessListener(location -> {
+                    if (location != null) {
+                        com.family.parentalcontrol.models.Location locModel = 
+                                new com.family.parentalcontrol.models.Location(childId,
+                                        location.getLatitude(), location.getLongitude(), location.getAccuracy());
+                        locModel.setBatteryLevel(0); // battery unknown in emergency stub
+                        supabaseClient.saveLocation(locModel, new SupabaseClient.SupabaseCallback<com.family.parentalcontrol.models.Location>() {
+                            @Override
+                            public void onSuccess(com.family.parentalcontrol.models.Location result) {
+                                Log.d(TAG, "Emergency location saved");
+                            }
+                            @Override
+                            public void onError(Exception e) {
+                                Log.e(TAG, "Error saving emergency location", e);
+                            }
+                        });
+                    }
+                });
+            } catch (SecurityException se) {
+                Log.e(TAG, "Location permission missing for emergency update", se);
+            }
 
         } catch (Exception e) {
             Log.e(TAG, "Error sending emergency location", e);

@@ -89,6 +89,8 @@ public class LocationTrackingService extends Service {
         }
     }
 
+    private static android.location.Location previousLocation = null;
+
     private void saveLocation(Location location) {
         try {
             SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
@@ -103,6 +105,30 @@ public class LocationTrackingService extends Service {
                                 location.getAccuracy()
                         );
                 locModel.setBatteryLevel(getBatteryLevel());
+
+                // detect unrealistic speed (>200km/h)
+                if (previousLocation != null) {
+                    float distance = location.distanceTo(previousLocation); // meters
+                    long timeDelta = location.getTime() - previousLocation.getTime(); // ms
+                    if (timeDelta > 0) {
+                        float speed = (distance / timeDelta) * 1000; // m/s
+                        if (speed > 55) { // ~200 km/h
+                            supabaseClient.createAlert(childId, "spoof",
+                                    "Unrealistic speed detected: " + speed + " m/s",
+                                    new SupabaseClient.SupabaseCallback<Boolean>() {
+                                        @Override
+                                        public void onSuccess(Boolean result) {
+                                            Log.d(TAG, "Spoof alert sent");
+                                        }
+                                        @Override
+                                        public void onError(Exception e) {
+                                            Log.e(TAG, "Failed to send spoof alert", e);
+                                        }
+                                    });
+                        }
+                    }
+                }
+                previousLocation = location;
 
                 supabaseClient.saveLocation(locModel, new SupabaseClient.SupabaseCallback<com.family.parentalcontrol.models.Location>() {
                     @Override

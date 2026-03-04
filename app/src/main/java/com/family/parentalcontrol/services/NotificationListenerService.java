@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.family.parentalcontrol.models.Location;
 import com.family.parentalcontrol.utils.SupabaseClient;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,8 +72,23 @@ public class NotificationListenerService extends NotificationListenerService {
             Log.d(TAG, "Saving notification: child=" + childId + ", app=" + packageName 
                     + ", msg=" + fullMessage.substring(0, Math.min(100, fullMessage.length())));
 
-            // TODO: Call SupabaseClient.logNotification() when implemented in SupabaseApi
-            // For now, log locally
+            // send to Supabase
+            Map<String,Object> note = new HashMap<>();
+            note.put("child_id", childId);
+            note.put("app_package", packageName);
+            note.put("title", title);
+            note.put("text", fullMessage);
+            note.put("timestamp", timestamp);
+            supabaseClient.logNotification(note, new SupabaseClient.SupabaseCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    Log.d(TAG, "Notification logged remotely");
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.e(TAG, "Failed to log notification", e);
+                }
+            });
         } catch (Exception e) {
             Log.e(TAG, "Error saving notification", e);
         }

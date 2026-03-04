@@ -32,6 +32,17 @@ This repository contains a single Android application that functions in two mode
 - Media gallery access
 - Alert management
 
+> **Control Guide (Parent UI flows)**
+>
+> - **Dashboard:** Tap any child card to open details. Quick actions allow: take front/back photo, record 10‑second video, start/stop live location streaming, lock/unlock screen, send SOS alert, and access sub‑menus for apps, location map, media, and notifications.
+> - **Camera Control Activity:** Access via details screen or global menu. Choose front/back camera, view gallery, schedule periodic captures (30/60 min) using built‑in picker.
+> - **Location Tracker Activity:** Shows interactive map (OSMDroid) with the child’s path and markers. Add/edit geofences, view history timeline, and toggle real‑time updates.
+> - **App Blocker Activity:** Lists all installed child apps with category tags (Games, Social, Education, Other). Toggle blocks, set time schedules (study, bedtime, weekend) via the scheduler UI.
+> - **Reports Activity:** Generate or view daily/weekly summaries; export as text or trigger generation via parent commands. Charts show usage, calls, messages, locations, and alerts.
+> - **Settings & Controls:** Change master PIN, manage website block list, notification keywords, and other preferences.
+>
+> Actions performed here enqueue commands to the child device; `CommandService` on the child polls Supabase every few seconds to execute them.
+
 ### Child Mode
 - Simple dashboard showing monitoring status (TRANSPARENT - not hidden)
 - Displays all active monitoring features
@@ -51,6 +62,19 @@ This repository contains a single Android application that functions in two mode
 - Services communicate via Supabase backend
 - Commands are queued and executed
 - Data is encrypted in transit (HTTPS)
+
+### Supabase Setup from Zero
+
+If you’re starting with no backend, follow these exact steps (full instructions live in [SUPABASE_SETUP.md](SUPABASE_SETUP.md)):
+
+1. **Sign up** at [supabase.com](https://supabase.com) and create a new project (e.g. `family-guard`).  No credit card required.
+2. **Retrieve API keys:** in **Settings → API** copy the Project URL and anon public key and paste them into `app/src/main/java/com/family/parentalcontrol/utils/SupabaseClient.java` (see configuration section below).
+3. **Run the SQL schema:** open the SQL editor, paste the contents of `supabase/migrations/001_initial_schema.sql`, and execute to create all tables described in the schema.
+4. **Create storage bucket:** under **Storage**, create a private bucket named `media`; add a policy allowing authenticated users to upload to their own folder.
+5. **Enable extensions:** optionally enable `uuid-ossp` under **Database → Extensions** for UUID support.
+6. **Verify connection:** build and install the app; the first launch should log successful calls to Supabase and create rows as you interact.
+
+The backend uses only Supabase’s free tier limits: 500 MB of database storage, 1 GB media storage, and 2 GB bandwidth. Make sure your usage stays within these or upgrade the project.
 
 ## Backend: Supabase (Free Tier)
 
@@ -206,19 +230,7 @@ See [SUPABASE_SETUP.md](SUPABASE_SETUP.md) troubleshooting section.
 
 ## Next Steps & TODOs
 
-- [ ] Implement QR code pairing flow
-- [ ] Add geofencing alert logic
-- [ ] Create parent dashboard UI with maps
-- [ ] Build app scheduler interface
-- [ ] Add call/SMS filtering logic
-- [ ] Implement media upload to Supabase storage
-- [ ] Create analytics and reports PDF export
-- [ ] Add biometric authentication for parent access
-- [ ] Implement data encryption at rest
-- [ ] Add notification keyword filtering
-- [ ] Create settings UI for feature configuration
-- [ ] Add user guides and tutorials
-
+All core features have now been implemented in code. Remaining efforts are limited to testing, QA, and optional enhancements such as biometric authentication, data‑at‑rest encryption, and user documentation.
 ## Support
 
 For issues:

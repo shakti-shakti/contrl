@@ -35,8 +35,8 @@ public class ChildSetupActivity extends AppCompatActivity {
     }
 
     private void scanQRCode() {
-        Toast.makeText(this, "QR Scanner not implemented yet", Toast.LENGTH_SHORT).show();
-        // TODO: Implement QR code scanning for pairing with parent
+        // launch existing scanner activity
+        startActivity(new Intent(this, QRScannerActivity.class));
     }
 
     private void setupChild() {

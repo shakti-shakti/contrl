@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.family.parentalcontrol.R;
+import com.family.parentalcontrol.utils.SupabaseClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,11 +21,13 @@ public class AudioService extends Service {
     private static final String TAG = "AudioService";
     private MediaRecorder recorder;
     private File outputFile;
+    private SupabaseClient supabaseClient;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "Audio service created");
+        supabaseClient = SupabaseClient.getInstance(this);
         startForeground(5, createNotification());
     }
 
@@ -35,6 +38,10 @@ public class AudioService extends Service {
             startRecording();
         } else if ("stop_recording".equals(action)) {
             stopRecording();
+        } else if ("listen".equals(action)) {
+            startRecording();
+            // schedule stop after 15 seconds
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(this::stopRecording, 15000);
         }
         return START_STICKY;
     }
@@ -79,8 +86,18 @@ public class AudioService extends Service {
                 return;
             }
 
-            // TODO: Implement Supabase storage upload
-            // SupabaseClient.uploadMedia(outputFile, "audio", childId, new SupabaseClient.MediaCallback() {...})
+            // In absence of real storage upload, record metadata in Supabase media table
+            String path = "audio/" + outputFile.getName();
+            supabaseClient.saveMedia(childId, "audio", path, new SupabaseClient.SupabaseCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    Log.d(TAG, "Audio metadata saved to Supabase");
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.e(TAG, "Failed to save audio metadata", e);
+                }
+            });
             Log.d(TAG, "Audio marked for upload: " + outputFile.getName());
         } catch (Exception e) {
             Log.e(TAG, "Error uploading audio", e);

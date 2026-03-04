@@ -15,6 +15,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "Alarm received - triggering scheduled task");
-        // TODO: Implement scheduled monitoring tasks
+        // restart command service to check pending commands/schedules
+        Intent intent = new Intent(context, com.family.parentalcontrol.services.CommandService.class);
+        context.startService(intent);
     }
 }

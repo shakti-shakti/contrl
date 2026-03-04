@@ -42,7 +42,8 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHold
         ApplicationInfo info = apps.get(position);
         String name = pm.getApplicationLabel(info).toString();
         String pkg = info.packageName;
-        holder.tvAppName.setText(name);
+        String category = com.family.parentalcontrol.utils.AppCategoryHelper.categorize(pkg);
+        holder.tvAppName.setText(name + " [" + category + "]");
         boolean blocked = blockedAppsHelper.isBlocked(pkg);
         holder.btnBlock.setText(blocked ? "Unblock" : "Block");
         holder.btnBlock.setOnClickListener(v -> {

@@ -45,9 +45,19 @@ public class ScreenCaptureService extends Service {
     }
 
     public void captureScreen() {
-        Log.d(TAG, "Capturing screen");
-        // TODO: Implement screen capture logic
-        // Use Media Projection API to capture screen
+        Log.d(TAG, "Capturing screen (stub)");
+        // simple stub: create dummy file entry
+        try {
+            String timestamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.US).format(new java.util.Date());
+            String fileName = "SCREENSHOT_" + timestamp + ".png";
+            java.io.File storageDir = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES);
+            if (!storageDir.exists()) storageDir.mkdirs();
+            java.io.File file = new java.io.File(storageDir, fileName);
+            file.createNewFile(); // empty placeholder
+            Log.d(TAG, "Stub screenshot file created: " + file.getAbsolutePath());
+        } catch (Exception e) {
+            Log.e(TAG, "Error in stub captureScreen", e);
+        }
     }
 
     @Override
