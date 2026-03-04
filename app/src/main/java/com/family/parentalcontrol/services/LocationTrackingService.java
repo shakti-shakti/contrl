@@ -19,7 +19,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.family.parentalcontrol.R;
-import com.family.parentalcontrol.models.Location;
 import com.family.parentalcontrol.utils.SupabaseClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;

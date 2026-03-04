@@ -118,4 +118,21 @@ public class Child implements Serializable {
     public void setMonitored(boolean monitored) {
         isMonitored = monitored;
     }
+
+    // Convenience methods
+    public void setName(String name) {
+        this.childName = name;
+    }
+
+    public String getName() {
+        return this.childName;
+    }
+
+    public void setAge(int age) {
+        this.childAge = age;
+    }
+
+    public int getAge() {
+        return this.childAge;
+    }
 }
