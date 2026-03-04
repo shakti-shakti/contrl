@@ -2,7 +2,6 @@ package com.family.parentalcontrol.services;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
@@ -20,7 +19,7 @@ import java.util.Locale;
  * Listens to all notifications and logs them for parent review
  * User is informed via notification that this service is active
  */
-public class NotificationListenerService extends NotificationListenerService {
+public class NotificationListenerService extends android.service.notification.NotificationListenerService {
     private static final String TAG = "NotificationListener";
     private SupabaseClient supabaseClient;
 

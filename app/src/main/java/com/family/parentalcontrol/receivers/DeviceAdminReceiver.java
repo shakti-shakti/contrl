@@ -1,6 +1,5 @@
 package com.family.parentalcontrol.receivers;
 
-import android.app.admin.DeviceAdminReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -10,7 +9,7 @@ import android.util.Log;
  * Enables device admin privileges for parental control features
  * User explicitly grants these permissions
  */
-public class DeviceAdminReceiver extends DeviceAdminReceiver {
+public class DeviceAdminReceiver extends android.app.admin.DeviceAdminReceiver {
     private static final String TAG = "DeviceAdminReceiver";
 
     @Override
