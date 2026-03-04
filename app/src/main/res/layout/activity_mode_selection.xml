@@ -18,7 +18,7 @@
         android:id="@+id/btn_parent_mode"
         android:layout_width="280dp"
         android:layout_height="100dp"
-        android:text="👨‍👩‍👧 PARENT MODE\nControl & Monitor"
+        android:text="👨‍👩‍👧 PARENT MODE\nControl &amp; Monitor"
         android:textSize="16sp"
         android:layout_marginBottom="20dp" />
 
