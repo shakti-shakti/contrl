@@ -1,6 +1,7 @@
 package com.family.parentalcontrol.services;
 
 import android.app.Service;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -101,7 +102,7 @@ public class CompleteScreenCaptureService extends Service {
         }
     }
 
-    private NotificationCompat.Notification createNotification() {
+    private Notification createNotification() {
         return new NotificationCompat.Builder(this, "screen_capture_channel")
                 .setContentTitle("Screen Capture Active")
                 .setContentText("Screenshots can be taken on demand")

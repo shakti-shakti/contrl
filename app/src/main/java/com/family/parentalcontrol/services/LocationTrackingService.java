@@ -1,6 +1,7 @@
 package com.family.parentalcontrol.services;
 
 import android.app.Service;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -186,7 +187,7 @@ public class LocationTrackingService extends Service {
         return null;
     }
 
-    private NotificationCompat.Notification createNotification() {
+    private Notification createNotification() {
         return new NotificationCompat.Builder(this, "location_channel")
                 .setContentTitle("Location Tracking Active")
                 .setContentText("Your device location is being tracked for safety.")

@@ -1,6 +1,7 @@
 package com.family.parentalcontrol.services;
 
 import android.app.Service;
+import android.app.Notification;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.os.IBinder;
@@ -160,7 +161,7 @@ public class CameraService extends Service {
         }
     }
 
-    private NotificationCompat.Notification createNotification() {
+    private Notification createNotification() {
         return new NotificationCompat.Builder(this, "camera_channel")
                 .setContentTitle("Camera Access Active")
                 .setContentText("Camera can be remotely accessed by parent")

@@ -1,6 +1,7 @@
 package com.family.parentalcontrol.services;
 
 import android.app.Service;
+import android.app.Notification;
 import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.IBinder;
@@ -104,7 +105,7 @@ public class AudioService extends Service {
         }
     }
 
-    private NotificationCompat.Notification createNotification() {
+    private Notification createNotification() {
         return new NotificationCompat.Builder(this, "audio_channel")
                 .setContentTitle("Audio Monitoring Active")
                 .setContentText("Microphone access enabled for safety")

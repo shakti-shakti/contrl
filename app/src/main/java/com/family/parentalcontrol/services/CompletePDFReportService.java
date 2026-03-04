@@ -1,6 +1,7 @@
 package com.family.parentalcontrol.services;
 
 import android.app.Service;
+import android.app.Notification;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -207,7 +208,7 @@ public class CompletePDFReportService extends Service {
         }
     }
 
-    private NotificationCompat.Notification createNotification() {
+    private Notification createNotification() {
         return new NotificationCompat.Builder(this, "report_channel")
                 .setContentTitle("Report Service Active")
                 .setContentText("Generating parental reports")

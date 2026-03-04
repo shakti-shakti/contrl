@@ -1,6 +1,7 @@
 package com.family.parentalcontrol.services;
 
 import android.app.Service;
+import android.app.Notification;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Camera;
@@ -195,7 +196,7 @@ public class CompleteSOSService extends Service {
         }
     }
 
-    private NotificationCompat.Notification createNotification() {
+    private Notification createNotification() {
         return new NotificationCompat.Builder(this, "sos_channel")
                 .setContentTitle("SOS Service Active")
                 .setContentText("Triple-tap to activate emergency mode")

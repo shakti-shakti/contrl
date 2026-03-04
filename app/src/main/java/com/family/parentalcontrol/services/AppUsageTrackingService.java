@@ -1,6 +1,7 @@
 package com.family.parentalcontrol.services;
 
 import android.app.Service;
+import android.app.Notification;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Intent;
@@ -130,7 +131,7 @@ public class AppUsageTrackingService extends Service {
         return null;
     }
 
-    private NotificationCompat.Notification createNotification() {
+    private Notification createNotification() {
         return new NotificationCompat.Builder(this, "app_usage_channel")
                 .setContentTitle("App Usage Tracking Active")
                 .setContentText("Monitoring app usage for safety.")
