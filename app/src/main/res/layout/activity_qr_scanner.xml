@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="QR Code Pairing"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scan parent's QR code to pair this device"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="30dp" />
+
+    <Button
+        android:id="@+id/btnScanQR"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Scan QR Code"
+        android:textSize="18sp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/blue" />
+
+    <TextView
+        android:id="@+id/tvQRResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No QR code scanned yet"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="@drawable/rounded_background"
+        android:layout_marginBottom="30dp" />
+
+    <Button
+        android:id="@+id/btnConfirmPairing"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Confirm Pairing"
+        android:textSize="18sp"
+        android:backgroundTint="@color/green" />
+
+</LinearLayout>

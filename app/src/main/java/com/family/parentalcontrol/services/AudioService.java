@@ -57,11 +57,33 @@ public class AudioService extends Service {
 
     private void stopRecording() {
         if (recorder != null) {
-            recorder.stop();
-            recorder.release();
-            recorder = null;
-            Log.d(TAG, "Recording stopped: " + outputFile.getAbsolutePath());
-            // TODO: upload audio to Supabase
+            try {
+                recorder.stop();
+                recorder.release();
+                recorder = null;
+                Log.d(TAG, "Recording stopped: " + outputFile.getAbsolutePath());
+                uploadAudioToSupabase();
+            } catch (Exception e) {
+                Log.e(TAG, "Error stopping recording", e);
+            }
+        }
+    }
+
+    private void uploadAudioToSupabase() {
+        try {
+            android.content.SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
+            String childId = prefs.getString("child_id", "");
+
+            if (childId.isEmpty() || !outputFile.exists()) {
+                Log.w(TAG, "Cannot upload: childId or file missing");
+                return;
+            }
+
+            // TODO: Implement Supabase storage upload
+            // SupabaseClient.uploadMedia(outputFile, "audio", childId, new SupabaseClient.MediaCallback() {...})
+            Log.d(TAG, "Audio marked for upload: " + outputFile.getName());
+        } catch (Exception e) {
+            Log.e(TAG, "Error uploading audio", e);
         }
     }
 

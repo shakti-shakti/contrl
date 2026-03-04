@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="QR Code for Child Pairing"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="30dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Share this QR code with your child to pair their device"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="30dp" />
+
+    <ImageView
+        android:id="@+id/ivQRCode"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:contentDescription="QR Code"
+        android:padding="16dp"
+        android:background="@drawable/rounded_background"
+        android:layout_marginBottom="30dp" />
+
+    <Button
+        android:id="@+id/btnGenerateQR"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Regenerate QR Code"
+        android:textSize="18sp"
+        android:backgroundTint="@color/blue" />
+
+</LinearLayout>
