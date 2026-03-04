@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CHILD SETUP"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="30dp" />
+
+    <EditText
+        android:id="@+id/et_child_name"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Child's Name"
+        android:padding="10dp"
+        android:layout_marginBottom="15dp" />
+
+    <EditText
+        android:id="@+id/et_child_age"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Age"
+        android:inputType="number"
+        android:padding="10dp"
+        android:layout_marginBottom="15dp" />
+
+    <EditText
+        android:id="@+id/et_device_name"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Device Name (e.g., My Android Phone)"
+        android:padding="10dp"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pairing with Parent:"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:id="@+id/btn_scan_qr"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Scan Parent's QR Code"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:id="@+id/btn_setup"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Complete Setup" />
+
+</LinearLayout>
