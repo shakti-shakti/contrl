@@ -3,7 +3,7 @@
 
 -- Profiles table (all users - parents and children)
 CREATE TABLE profiles (
-  id UUID REFERENCES auth.users PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   device_mode TEXT CHECK (device_mode IN ('parent', 'child')) NOT NULL,
   device_name TEXT NOT NULL,
   master_pin TEXT, -- Only for parent accounts

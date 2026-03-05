@@ -54,18 +54,15 @@ public class ParentSetupActivity extends AppCompatActivity {
             return;
         }
 
-        // Generate parent ID
-        String parentId = java.util.UUID.randomUUID().toString();
-
         // Create parent profile in Supabase
-        User parentUser = new User(parentId, "parent", parentName, masterPin);
+        User parentUser = new User("parent", parentName, masterPin);
         SupabaseClient.getInstance(this).createUser(parentUser, new SupabaseClient.SupabaseCallback<User>() {
             @Override
             public void onSuccess(User result) {
-                // Save to SharedPreferences after successful Supabase creation
+                // Save the returned user ID to SharedPreferences
                 SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
                 prefs.edit()
-                        .putString("parent_id", parentId)
+                        .putString("parent_id", result.getId())
                         .putString("device_name", parentName)
                         .putString("master_pin", masterPin)
                         .putBoolean("parent_setup_complete", true)

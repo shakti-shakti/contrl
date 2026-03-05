@@ -66,8 +66,8 @@ public class ChildDashboardActivity extends AppCompatActivity {
 
         // Display monitoring status clearly
         updateMonitoringStatus();
-        // start background services for monitoring
-        startMonitoringServices();
+        // Services will be started only after manual permission check
+        // startMonitoringServices();
 
         // Click listeners
         btnContactParent.setOnClickListener(v -> {
@@ -101,7 +101,8 @@ public class ChildDashboardActivity extends AppCompatActivity {
             finish();
         });
 
-        requestCriticalPermissions();
+        // Removed automatic permission requests - user will grant manually
+        // requestCriticalPermissions();
     }
 
     private void requestCriticalPermissions() {

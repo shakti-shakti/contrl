@@ -27,6 +27,11 @@ public class User implements Serializable {
         this.createdAt = new Date();
     }
 
+    // Constructor without ID for creation (database generates it)
+    public User(String deviceMode, String deviceName, String masterPin) {
+        this(null, deviceMode, deviceName, masterPin);
+    }
+
     // Getters and Setters
     public String getId() {
         return id;

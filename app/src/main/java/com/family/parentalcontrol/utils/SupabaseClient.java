@@ -114,7 +114,9 @@ public class SupabaseClient {
     // ============ PROFILES ============
     public void createUser(User user, SupabaseCallback<User> callback) {
         Log.d(TAG, "Creating user: " + user.getDeviceName());
-        api.createUser(user).enqueue(new Callback<User>() {
+        // Don't send ID in request body - let database generate it
+        User userWithoutId = new User(null, user.getDeviceMode(), user.getDeviceName(), user.getMasterPin());
+        api.createUser(userWithoutId).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
