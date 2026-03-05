@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.family.parentalcontrol.R;
@@ -25,6 +26,7 @@ import com.family.parentalcontrol.utils.TripleTapDetector;
 public class ChildDashboardActivity extends AppCompatActivity {
     private static final String TAG = "ChildDashboardActivity";
     private TextView tvChildInfo;
+    private TextView tvConnectionStatus;
     private TextView tvMonitoringStatus;
     private Button btnContactParent;
     private Button btnSettings;
@@ -38,6 +40,7 @@ public class ChildDashboardActivity extends AppCompatActivity {
 
         // Initialize views
         tvChildInfo = findViewById(R.id.tv_child_info);
+        tvConnectionStatus = findViewById(R.id.tv_connection_status);
         tvMonitoringStatus = findViewById(R.id.tv_monitoring_status);
         btnContactParent = findViewById(R.id.btn_contact_parent);
         btnSettings = findViewById(R.id.btn_settings);
@@ -74,6 +77,11 @@ public class ChildDashboardActivity extends AppCompatActivity {
                 Toast.makeText(this, "Parent not paired yet", Toast.LENGTH_SHORT).show();
             }
         });
+
+        tvConnectionStatus.setOnClickListener(v -> showConnectionDetails());
+
+        // test supabase connection from child side as well
+        testConnection();
 
         btnSettings.setOnClickListener(v -> {
             Toast.makeText(this, "Settings - Coming soon", Toast.LENGTH_SHORT).show();
@@ -128,6 +136,45 @@ public class ChildDashboardActivity extends AppCompatActivity {
         status.append("\nYour parent can see this information to keep you safe.");
 
         tvMonitoringStatus.setText(status.toString());
+    }
+
+    private void testConnection() {
+        tvConnectionStatus.setText("🔄 Testing connection...");
+        SupabaseClient.getInstance(this).testConnection(new SupabaseClient.SupabaseCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean result) {
+                runOnUiThread(() -> {
+                    if (result) {
+                        tvConnectionStatus.setText("🟢 Connected to " + SupabaseClient.getSupabaseUrl());
+                        tvConnectionStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+                    } else {
+                        tvConnectionStatus.setText("🔴 Connection failed");
+                        tvConnectionStatus.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(() -> {
+                    tvConnectionStatus.setText("🔴 Connection error");
+                    tvConnectionStatus.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    Log.e(TAG, "Child connection test failed", e);
+                });
+            }
+        });
+    }
+
+    private void showConnectionDetails() {
+        String message = "Supabase URL: " + SupabaseClient.getSupabaseUrl();
+        SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
+        String childId = prefs.getString("child_id", "(none)");
+        message += "\nChild ID: " + childId;
+        new AlertDialog.Builder(this)
+                .setTitle("Connection Info")
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show();
     }
 
     private void startMonitoringServices() {
