@@ -24,3 +24,11 @@
 # Suppress warnings
 -dontwarn org.jetbrains.kotlin.**
 -dontwarn kotlin.**
+-dontwarn java.lang.management.**
+-dontwarn org.slf4j.impl.**
+-dontwarn io.ktor.util.debug.**
+
+# Missing classes that are optional or not available in Android
+-dontwarn java.lang.management.ManagementFactory
+-dontwarn java.lang.management.RuntimeMXBean
+-dontwarn org.slf4j.impl.StaticLoggerBinder
