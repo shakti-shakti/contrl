@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
 import com.family.parentalcontrol.services.LocationTrackingService;
 import com.family.parentalcontrol.services.AppUsageTrackingService;
 
@@ -28,12 +30,24 @@ public class BootReceiver extends BroadcastReceiver {
 
             if (modeSet) {
                 if ("child".equals(deviceMode)) {
-                    // Start child mode monitoring services
-                    context.startForegroundService(new Intent(context, LocationTrackingService.class));
-                    context.startForegroundService(new Intent(context, AppUsageTrackingService.class));
-                    Log.d(TAG, "Child monitoring services started");
+                    // Check permissions before starting services
+                    if (hasRequiredPermissions(context)) {
+                        // Start child mode monitoring services
+                        context.startForegroundService(new Intent(context, LocationTrackingService.class));
+                        context.startForegroundService(new Intent(context, AppUsageTrackingService.class));
+                        Log.d(TAG, "Child monitoring services started");
+                    } else {
+                        Log.w(TAG, "Required permissions not granted, skipping service start on boot");
+                    }
                 }
             }
         }
+    }
+
+    private boolean hasRequiredPermissions(Context context) {
+        return ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
+               == android.content.pm.PackageManager.PERMISSION_GRANTED ||
+               ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+               == android.content.pm.PackageManager.PERMISSION_GRANTED;
     }
 }

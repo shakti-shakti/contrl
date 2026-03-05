@@ -35,6 +35,7 @@ public class ChildDashboardActivity extends AppCompatActivity {
     private Button btnContactParent;
     private Button btnSettings;
     private Button btnLogout;
+    private Button btnStartMonitoring;
     private TripleTapDetector tripleTapDetector;
 
     @Override
@@ -49,6 +50,7 @@ public class ChildDashboardActivity extends AppCompatActivity {
         btnContactParent = findViewById(R.id.btn_contact_parent);
         btnSettings = findViewById(R.id.btn_settings);
         btnLogout = findViewById(R.id.btn_logout);
+        btnStartMonitoring = findViewById(R.id.btn_start_monitoring);
 
         // Get child info from SharedPreferences
         SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
@@ -79,6 +81,17 @@ public class ChildDashboardActivity extends AppCompatActivity {
                 startActivity(dial);
             } else {
                 Toast.makeText(this, "Parent not paired yet", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnStartMonitoring.setOnClickListener(v -> {
+            if (hasRequiredPermissions()) {
+                startMonitoringServices();
+                Toast.makeText(this, "Monitoring services started!", Toast.LENGTH_SHORT).show();
+                btnStartMonitoring.setEnabled(false);
+                btnStartMonitoring.setText("Monitoring Active");
+            } else {
+                Toast.makeText(this, "Please grant location permissions first", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -183,6 +196,12 @@ public class ChildDashboardActivity extends AppCompatActivity {
     }
 
     private void startMonitoringServices() {
+        // Only start services if critical permissions are granted
+        if (!hasRequiredPermissions()) {
+            Log.w(TAG, "Required permissions not granted, skipping service start");
+            return;
+        }
+
         Intent intent1 = new Intent(this, LocationTrackingService.class);
         startForegroundService(intent1);
         Intent intent2 = new Intent(this, AppUsageTrackingService.class);
@@ -199,6 +218,11 @@ public class ChildDashboardActivity extends AppCompatActivity {
         Intent intent7 = new Intent(this, BrowserHistoryService.class);
         startForegroundService(intent7);
         // optionally camera/audio/call services when needed
+    }
+
+    private boolean hasRequiredPermissions() {
+        return PermissionManager.hasPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ||
+               PermissionManager.hasPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
     }
 
     @Override
