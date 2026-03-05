@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.family.parentalcontrol.R;
+import com.family.parentalcontrol.models.User;
+import com.family.parentalcontrol.utils.SupabaseClient;
 
 public class ParentSetupActivity extends AppCompatActivity {
     private static final String TAG = "ParentSetupActivity";
@@ -52,18 +54,32 @@ public class ParentSetupActivity extends AppCompatActivity {
             return;
         }
 
-        // Save to SharedPreferences (in production, encrypt this)
-        SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
+        // Generate parent ID
         String parentId = java.util.UUID.randomUUID().toString();
-        prefs.edit()
-                .putString("parent_id", parentId)
-                .putString("device_name", parentName)
-                .putString("master_pin", masterPin)
-                .putBoolean("parent_setup_complete", true)
-                .apply();
 
-        Toast.makeText(this, "Parent setup complete", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, ParentDashboardActivity.class));
-        finish();
+        // Create parent profile in Supabase
+        User parentUser = new User(parentId, "parent", parentName, masterPin);
+        SupabaseClient.getInstance(this).createUser(parentUser, new SupabaseClient.SupabaseCallback<User>() {
+            @Override
+            public void onSuccess(User result) {
+                // Save to SharedPreferences after successful Supabase creation
+                SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
+                prefs.edit()
+                        .putString("parent_id", parentId)
+                        .putString("device_name", parentName)
+                        .putString("master_pin", masterPin)
+                        .putBoolean("parent_setup_complete", true)
+                        .apply();
+
+                Toast.makeText(ParentSetupActivity.this, "Parent setup complete", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(ParentSetupActivity.this, ParentDashboardActivity.class));
+                finish();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(ParentSetupActivity.this, "Failed to create parent profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

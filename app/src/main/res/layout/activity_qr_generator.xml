@@ -30,6 +30,16 @@
         android:contentDescription="QR Code"
         android:padding="16dp"
         android:background="@drawable/rounded_background"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/tvParentId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Parent ID: Loading..."
+        android:textSize="12sp"
+        android:gravity="center"
+        android:textColor="@android:color/darker_gray"
         android:layout_marginBottom="30dp" />
 
     <Button

@@ -3,12 +3,10 @@ package com.family.parentalcontrol.services;
 import android.app.Service;
 import android.app.Notification;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.IBinder;
 import android.util.Log;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.family.parentalcontrol.R;
@@ -30,15 +28,6 @@ public class AudioService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "Audio service created");
-        
-        // Check if microphone permission is granted
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) 
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.w(TAG, "Microphone permission not granted, cannot start service");
-            stopSelf();
-            return;
-        }
-        
         supabaseClient = SupabaseClient.getInstance(this);
         startForeground(5, createNotification());
     }

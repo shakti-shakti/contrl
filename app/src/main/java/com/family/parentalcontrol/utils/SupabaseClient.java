@@ -59,6 +59,25 @@ public class SupabaseClient {
     }
 
     /**
+     * Test Supabase connection by making a simple query
+     */
+    public void testConnection(SupabaseCallback<Boolean> callback) {
+        // Try to query profiles table (should return empty list if connected)
+        api.getUser("test").enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                // If we get any response (even 404), connection is working
+                callback.onSuccess(true);
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                callback.onError(new Exception("Connection failed: " + t.getMessage()));
+            }
+        });
+    }
+
+    /**
      * Build Retrofit client with Supabase headers and interceptor
      */
     private SupabaseApi buildRetrofitClient() {

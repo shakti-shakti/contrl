@@ -22,6 +22,7 @@ import java.util.List;
 public class ParentDashboardActivity extends AppCompatActivity {
     private static final String TAG = "ParentDashboardActivity";
     private TextView tvWelcome;
+    private TextView tvConnectionStatus;
     private androidx.recyclerview.widget.RecyclerView rvChildren;
     private Button btnAddChild;
     private Button btnSettings;
@@ -37,6 +38,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
         // Initialize views
         tvWelcome = findViewById(R.id.tv_welcome);
+        tvConnectionStatus = findViewById(R.id.tv_connection_status);
         rvChildren = findViewById(R.id.rv_children);
         btnAddChild = findViewById(R.id.btn_add_child);
         btnSettings = findViewById(R.id.btn_settings);
@@ -46,6 +48,9 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
         // Initialize Supabase
         supabaseClient = SupabaseClient.getInstance(this);
+
+        // Test connection
+        testConnection();
 
         // Set welcome message
         SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
@@ -104,6 +109,33 @@ public class ParentDashboardActivity extends AppCompatActivity {
             Toast.makeText(this, "No children added yet. Click 'Add Child' to pair a device.", 
                     Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void testConnection() {
+        tvConnectionStatus.setText("🔄 Testing connection...");
+        supabaseClient.testConnection(new SupabaseClient.SupabaseCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean result) {
+                runOnUiThread(() -> {
+                    if (result) {
+                        tvConnectionStatus.setText("🟢 Connected");
+                        tvConnectionStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+                    } else {
+                        tvConnectionStatus.setText("🔴 Connection failed");
+                        tvConnectionStatus.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(() -> {
+                    tvConnectionStatus.setText("🔴 Connection error");
+                    tvConnectionStatus.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    Log.e(TAG, "Connection test failed", e);
+                });
+            }
+        });
     }
 
     private void showAddChildDialog() {

@@ -41,17 +41,6 @@ public class CallSmsService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "CallSmsService created");
-        
-        // Check if required permissions are granted
-        if ((androidx.core.app.ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_CALL_LOG) 
-                != PackageManager.PERMISSION_GRANTED) ||
-            (androidx.core.app.ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_SMS) 
-                != PackageManager.PERMISSION_GRANTED)) {
-            Log.w(TAG, "Call log or SMS permissions not granted, cannot start service");
-            stopSelf();
-            return;
-        }
-        
         handler = new Handler(Looper.getMainLooper());
         supabaseClient = SupabaseClient.getInstance(this);
         startForeground(6, createNotification());

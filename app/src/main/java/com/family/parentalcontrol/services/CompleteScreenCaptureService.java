@@ -33,15 +33,6 @@ public class CompleteScreenCaptureService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "Screen Capture Service created");
-        
-        // Check if storage permissions are available (for saving screenshot)
-        if (androidx.core.app.ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) 
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.w(TAG, "Storage permission not granted, cannot start service");
-            stopSelf();
-            return;
-        }
-        
         supabaseClient = SupabaseClient.getInstance(this);
         startForeground(7, createNotification());
     }

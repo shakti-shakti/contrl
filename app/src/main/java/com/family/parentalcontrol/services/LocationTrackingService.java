@@ -41,18 +41,6 @@ public class LocationTrackingService extends Service {
         super.onCreate();
         Log.d(TAG, "LocationTrackingService created");
 
-        // Check if location permissions are granted before starting foreground service
-        if (ActivityCompat.checkSelfPermission(this, 
-                android.Manifest.permission.ACCESS_FINE_LOCATION) 
-                != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, 
-                android.Manifest.permission.ACCESS_COARSE_LOCATION) 
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.w(TAG, "Location permissions not granted, cannot start foreground service");
-            stopSelf();
-            return;
-        }
-
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         supabaseClient = SupabaseClient.getInstance(this);
 

@@ -21,6 +21,15 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/tv_connection_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔄 Testing connection..."
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginEnd="10dp" />
+
         <Button
             android:id="@+id/btn_settings"
             android:layout_width="wrap_content"
