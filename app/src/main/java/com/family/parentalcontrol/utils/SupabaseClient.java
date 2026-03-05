@@ -42,6 +42,10 @@ public class SupabaseClient {
     private SupabaseApi api;
     private Context context;
 
+    public static String getSupabaseUrl() {
+        return SUPABASE_URL;
+    }
+
     public static SupabaseClient getInstance(Context context) {
         if (instance == null) {
             synchronized (SupabaseClient.class) {
@@ -116,7 +120,16 @@ public class SupabaseClient {
                 if (response.isSuccessful()) {
                     callback.onSuccess(response.body());
                 } else {
-                    callback.onError(new Exception("HTTP " + response.code()));
+                    String err = "HTTP " + response.code();
+                    try {
+                        if (response.errorBody() != null) {
+                            err += ": " + response.errorBody().string();
+                        }
+                    } catch (IOException ioe) {
+                        // ignore
+                    }
+                    Log.e(TAG, "createUser failed: " + err);
+                    callback.onError(new Exception(err));
                 }
             }
 

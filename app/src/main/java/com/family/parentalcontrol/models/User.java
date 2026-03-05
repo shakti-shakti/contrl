@@ -4,10 +4,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class User implements Serializable {
+    // column names in Supabase use snake_case, map accordingly
+    @com.google.gson.annotations.SerializedName("id")
     private String id;
+    @com.google.gson.annotations.SerializedName("device_mode")
     private String deviceMode; // "parent" or "child"
+    @com.google.gson.annotations.SerializedName("device_name")
     private String deviceName;
+    @com.google.gson.annotations.SerializedName("master_pin")
     private String masterPin;
+    @com.google.gson.annotations.SerializedName("created_at")
     private Date createdAt;
 
     public User() {

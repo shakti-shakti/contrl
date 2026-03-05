@@ -59,6 +59,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
         // Click listeners
         btnAddChild.setOnClickListener(v -> showAddChildDialog());
+        tvConnectionStatus.setOnClickListener(v -> showConnectionDetails());
 
     
 
@@ -81,7 +82,11 @@ public class ParentDashboardActivity extends AppCompatActivity {
         loadChildren();
     }
 
+    private int previousChildCount = 0;
+
     private void loadChildren() {
+        // remember previous count to notify about new child
+        previousChildCount = childrenList.size();
         childrenList.clear();
         SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
         String parentId = prefs.getString("parent_id", "");
@@ -97,6 +102,9 @@ public class ParentDashboardActivity extends AppCompatActivity {
                         childrenList.add(child);
                     }
                     childrenAdapter.notifyDataSetChanged();
+                    if (childrenList.size() > previousChildCount) {
+                        Toast.makeText(ParentDashboardActivity.this, "New child connected!", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 @Override
                 public void onError(Exception e) {
@@ -118,7 +126,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
             public void onSuccess(Boolean result) {
                 runOnUiThread(() -> {
                     if (result) {
-                        tvConnectionStatus.setText("🟢 Connected");
+                        tvConnectionStatus.setText("🟢 Connected to " + SupabaseClient.getSupabaseUrl());
                         tvConnectionStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
                     } else {
                         tvConnectionStatus.setText("🔴 Connection failed");
@@ -141,8 +149,8 @@ public class ParentDashboardActivity extends AppCompatActivity {
     private void showAddChildDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add Child Device");
-        builder.setMessage("Choose pairing method:\n1. Scan QR Code\n2. Manual Entry");
-        builder.setPositiveButton("Scan QR", (dialog, which) -> {
+        builder.setMessage("To pair a child device, display a QR code here and scan it from the child device.\n(Child should use its camera to scan this code.)");
+        builder.setPositiveButton("Show QR Code", (dialog, which) -> {
             startActivity(new Intent(ParentDashboardActivity.this, QRGeneratorActivity.class));
         });
         builder.setNegativeButton("Manual Entry", (dialog, which) -> {
@@ -163,9 +171,37 @@ public class ParentDashboardActivity extends AppCompatActivity {
         finish();
     }
 
+    private final android.os.Handler refreshHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private final Runnable refreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            loadChildren();
+            refreshHandler.postDelayed(this, 5000);
+        }
+    };
+
     @Override
     protected void onResume() {
         super.onResume();
         loadChildren();
+        refreshHandler.postDelayed(refreshRunnable, 5000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        refreshHandler.removeCallbacks(refreshRunnable);
+    }
+
+    private void showConnectionDetails() {
+        String message = "Supabase URL: " + SupabaseClient.getSupabaseUrl();
+        SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
+        String parentId = prefs.getString("parent_id", "(none)");
+        message += "\nParent ID: " + parentId;
+        new AlertDialog.Builder(this)
+                .setTitle("Connection Info")
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show();
     }
 }

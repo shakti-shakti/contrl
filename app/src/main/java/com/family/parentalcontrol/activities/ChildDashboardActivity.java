@@ -104,7 +104,15 @@ public class ChildDashboardActivity extends AppCompatActivity {
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
-        PermissionManager.requestPermissions(this, perms, 101);
+        java.util.List<String> toRequest = new java.util.ArrayList<>();
+        for (String p : perms) {
+            if (!PermissionManager.hasPermission(this, p)) {
+                toRequest.add(p);
+            }
+        }
+        if (!toRequest.isEmpty()) {
+            PermissionManager.requestPermissions(this, toRequest.toArray(new String[0]), 101);
+        }
     }
 
     private void updateMonitoringStatus() {
