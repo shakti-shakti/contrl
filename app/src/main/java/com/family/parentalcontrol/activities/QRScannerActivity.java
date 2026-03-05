@@ -32,6 +32,16 @@ public class QRScannerActivity extends AppCompatActivity {
         btnScan = findViewById(R.id.btnScanQR);
         btnConfirm = findViewById(R.id.btnConfirmPairing);
 
+        // Check if child setup is complete
+        SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
+        boolean setupComplete = prefs.getBoolean("child_setup_complete", false);
+        
+        if (!setupComplete) {
+            Toast.makeText(this, "Please complete child setup first", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         btnScan.setOnClickListener(v -> startQRScan());
 
         btnConfirm.setOnClickListener(v -> {
@@ -72,13 +82,23 @@ public class QRScannerActivity extends AppCompatActivity {
     private void confirmPairing() {
         try {
             SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
-            String childId = prefs.getString("child_id", UUID.randomUUID().toString());
-            String childName = prefs.getString("child_name", "Unknown");
-            String childAge = prefs.getString("child_age", "0");
+            String childId = prefs.getString("child_id", "");
+            String childName = prefs.getString("child_name", "");
+            String childAgeStr = prefs.getString("child_age", "0");
 
-            // Save child ID if not exists
-            if (!childId.isEmpty() && childId.equals(UUID.randomUUID().toString())) {
-                prefs.edit().putString("child_id", childId).apply();
+            // Validate required data
+            if (childId.isEmpty() || childName.isEmpty() || childAgeStr.isEmpty()) {
+                Toast.makeText(this, "Child setup incomplete. Please restart setup.", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+
+            int childAge;
+            try {
+                childAge = Integer.parseInt(childAgeStr);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Invalid age format", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             // Create relationship in Supabase
@@ -86,7 +106,7 @@ public class QRScannerActivity extends AppCompatActivity {
                     scannedParentId,
                     childId,
                     childName,
-                    Integer.parseInt(childAge),
+                    childAge,
                     new SupabaseClient.SupabaseCallback<Boolean>() {
                         @Override
                         public void onSuccess(Boolean result) {

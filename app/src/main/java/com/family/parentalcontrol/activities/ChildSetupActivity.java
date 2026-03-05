@@ -35,6 +35,15 @@ public class ChildSetupActivity extends AppCompatActivity {
     }
 
     private void scanQRCode() {
+        // Check if setup is complete before allowing QR scan
+        SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
+        boolean setupComplete = prefs.getBoolean("child_setup_complete", false);
+        
+        if (!setupComplete) {
+            Toast.makeText(this, "Please complete child setup first by filling all fields and clicking Setup", Toast.LENGTH_LONG).show();
+            return;
+        }
+        
         // launch existing scanner activity
         startActivity(new Intent(this, QRScannerActivity.class));
     }

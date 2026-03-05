@@ -123,6 +123,18 @@
             android:name=".activities.SettingsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".activities.QRGeneratorActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.QRScannerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.CalculatorActivity"
+            android:exported="false" />
+
         <!-- Services -->
         <service
             android:name=".services.LocationTrackingService"
