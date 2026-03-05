@@ -23,6 +23,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
     private static final String TAG = "ParentDashboardActivity";
     private TextView tvWelcome;
     private TextView tvConnectionStatus;
+    private TextView tvParentId;
     private androidx.recyclerview.widget.RecyclerView rvChildren;
     private Button btnAddChild;
     private Button btnSettings;
@@ -39,8 +40,8 @@ public class ParentDashboardActivity extends AppCompatActivity {
         // Initialize views
         tvWelcome = findViewById(R.id.tv_welcome);
         tvConnectionStatus = findViewById(R.id.tv_connection_status);
+        tvParentId = findViewById(R.id.tv_parent_id);
         rvChildren = findViewById(R.id.rv_children);
-        btnAddChild = findViewById(R.id.btn_add_child);
         btnSettings = findViewById(R.id.btn_settings);
         btnLogout = findViewById(R.id.btn_logout);
         
@@ -56,6 +57,10 @@ public class ParentDashboardActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
         String deviceName = prefs.getString("device_name", "Parent");
         tvWelcome.setText("Welcome, " + deviceName);
+        String parentId = prefs.getString("parent_id", "");
+        if (!parentId.isEmpty()) {
+            tvParentId.setText("ID: " + parentId);
+        }
 
         // Click listeners
         btnAddChild.setOnClickListener(v -> showAddChildDialog());
