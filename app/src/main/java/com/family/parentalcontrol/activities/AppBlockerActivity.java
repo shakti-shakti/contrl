@@ -1,5 +1,6 @@
 package com.family.parentalcontrol.activities;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.family.parentalcontrol.R;
+import com.family.parentalcontrol.utils.PermissionManager;
 
 public class AppBlockerActivity extends AppCompatActivity {
     @Override

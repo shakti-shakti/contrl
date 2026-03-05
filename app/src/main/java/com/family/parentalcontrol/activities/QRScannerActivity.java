@@ -87,9 +87,9 @@ public class QRScannerActivity extends AppCompatActivity {
                     childId,
                     childName,
                     Integer.parseInt(childAge),
-                    new SupabaseClient.SupabaseCallback<String>() {
+                    new SupabaseClient.SupabaseCallback<Boolean>() {
                         @Override
-                        public void onSuccess(String result) {
+                        public void onSuccess(Boolean result) {
                             Toast.makeText(QRScannerActivity.this, 
                                     "Successfully paired with parent!", 
                                     Toast.LENGTH_SHORT).show();

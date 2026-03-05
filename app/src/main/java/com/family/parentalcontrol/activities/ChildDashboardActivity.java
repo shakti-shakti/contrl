@@ -11,10 +11,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.family.parentalcontrol.R;
-import com.family.parentalcontrol.services.CompleteSOSService;
-import com.family.parentalcontrol.services.EnvironmentMonitoringService;
+import com.family.parentalcontrol.services.AppUsageTrackingService;
 import com.family.parentalcontrol.services.BrowserHistoryService;
+import com.family.parentalcontrol.services.CommandService;
+import com.family.parentalcontrol.services.CompleteSOSService;
 import com.family.parentalcontrol.services.ConnectivityService;
+import com.family.parentalcontrol.services.EnvironmentMonitoringService;
+import com.family.parentalcontrol.services.LocationTrackingService;
+import com.family.parentalcontrol.services.NotificationListenerService;
+import com.family.parentalcontrol.utils.PermissionManager;
 import com.family.parentalcontrol.utils.TripleTapDetector;
 
 public class ChildDashboardActivity extends AppCompatActivity {
@@ -59,7 +64,6 @@ public class ChildDashboardActivity extends AppCompatActivity {
 
         // Click listeners
         btnContactParent.setOnClickListener(v -> {
-            SharedPreferences prefs = getSharedPreferences("ParentalControl", MODE_PRIVATE);
             String parentId = prefs.getString("parent_id", "");
             if (!parentId.isEmpty()) {
                 // for simplicity open dialer with parent id as number (could be phone)

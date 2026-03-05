@@ -60,7 +60,7 @@ public class CompleteLocationTrackerActivity extends AppCompatActivity {
             }
 
             // Fetch location history from Supabase
-            supabaseClient.getLocationHistory(childId, new SupabaseClient.SupabaseCallback<List<Location>>() {
+            supabaseClient.getLocationHistory(childId, 50, new SupabaseClient.SupabaseCallback<List<Location>>() {
                 @Override
                 public void onSuccess(List<Location> locations) {
                     locationHistory = locations;
@@ -120,8 +120,8 @@ public class CompleteLocationTrackerActivity extends AppCompatActivity {
             }
 
             // Add overlays to map
-            ItemizedIconOverlay<OverlayItem> overlay = new ItemizedIconOverlay<>(items, 
-                    getBaseContext(), 
+            android.graphics.drawable.Drawable drawable = android.content.res.ContextCompat.getDrawable(this, R.drawable.ic_location);
+            ItemizedIconOverlay<OverlayItem> overlay = new ItemizedIconOverlay<>(items, drawable,
                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                         @Override
                         public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
