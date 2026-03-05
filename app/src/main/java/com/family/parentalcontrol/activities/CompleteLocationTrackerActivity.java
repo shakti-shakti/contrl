@@ -137,7 +137,7 @@ public class CompleteLocationTrackerActivity extends AppCompatActivity {
                         }
                     };
             @SuppressWarnings("unchecked")
-            ItemizedIconOverlay<OverlayItem> overlay = new ItemizedIconOverlay(items, gestureListener);
+            ItemizedIconOverlay<OverlayItem> overlay = new ItemizedIconOverlay(items, gestureListener, this);
 
             mapView.getOverlays().add(overlay);
             mapView.getOverlays().add(pathOverlay);
