@@ -11,6 +11,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
+
+import com.family.parentalcontrol.utils.SupabaseClient;
+
 import com.family.parentalcontrol.R;
 import com.family.parentalcontrol.services.AppUsageTrackingService;
 import com.family.parentalcontrol.services.BrowserHistoryService;
