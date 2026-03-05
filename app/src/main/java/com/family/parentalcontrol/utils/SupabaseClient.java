@@ -109,7 +109,7 @@ public class SupabaseClient {
     }
 
     public void getUser(String userId, SupabaseCallback<User> callback) {
-        api.getUser(userId).enqueue(new Callback<List<User>>() {
+        api.getUser("eq." + userId).enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
@@ -127,7 +127,7 @@ public class SupabaseClient {
     }
 
     public void updateUser(User user, SupabaseCallback<User> callback) {
-        api.updateUser(user.getId(), user).enqueue(new Callback<User>() {
+        api.updateUser("eq." + user.getId(), user).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
@@ -167,7 +167,7 @@ public class SupabaseClient {
     }
 
     public void getChildrenForParent(String parentId, SupabaseCallback<List<Map<String, Object>>> callback) {
-        api.getChildrenForParent(parentId).enqueue(new Callback<List<Map<String, Object>>>() {
+        api.getChildrenForParent("eq." + parentId).enqueue(new Callback<List<Map<String, Object>>>() {
             @Override
             public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
                 if (response.isSuccessful()) {
@@ -206,7 +206,7 @@ public class SupabaseClient {
     }
 
     public void getLocationHistory(String childId, int limit, SupabaseCallback<List<Location>> callback) {
-        api.getLocationHistory(childId, limit).enqueue(new Callback<List<Location>>() {
+        api.getLocationHistory("eq." + childId, "timestamp.desc", limit).enqueue(new Callback<List<Location>>() {
             @Override
             public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
                 if (response.isSuccessful()) {
@@ -224,7 +224,7 @@ public class SupabaseClient {
     }
 
     public void getLatestLocation(String childId, SupabaseCallback<Location> callback) {
-        api.getLatestLocation(childId).enqueue(new Callback<List<Location>>() {
+        api.getLatestLocation("eq." + childId, "timestamp.desc", 1).enqueue(new Callback<List<Location>>() {
             @Override
             public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
@@ -261,7 +261,7 @@ public class SupabaseClient {
     }
 
     public void getAppUsageStats(String childId, SupabaseCallback<List<AppUsage>> callback) {
-        api.getAppUsageStats(childId).enqueue(new Callback<List<AppUsage>>() {
+        api.getAppUsageStats("eq." + childId, "usage_duration.desc").enqueue(new Callback<List<AppUsage>>() {
             @Override
             public void onResponse(Call<List<AppUsage>> call, Response<List<AppUsage>> response) {
                 if (response.isSuccessful()) {
@@ -298,7 +298,7 @@ public class SupabaseClient {
     }
 
     public void getGeofences(String childId, SupabaseCallback<List<Geofence>> callback) {
-        api.getGeofences(childId).enqueue(new Callback<List<Geofence>>() {
+        api.getGeofences("eq." + childId, "eq.true").enqueue(new Callback<List<Geofence>>() {
             @Override
             public void onResponse(Call<List<Geofence>> call, Response<List<Geofence>> response) {
                 if (response.isSuccessful()) {
@@ -349,7 +349,7 @@ public class SupabaseClient {
     }
 
     public void fetchPendingCommands(String childId, SupabaseCallback<List<Command>> callback) {
-        api.getPendingCommands(childId).enqueue(new Callback<List<Command>>() {
+        api.getPendingCommands("eq." + childId, "eq.pending", "created_at.asc").enqueue(new Callback<List<Command>>() {
             @Override
             public void onResponse(Call<List<Command>> call, Response<List<Command>> response) {
                 if (response.isSuccessful()) {
@@ -399,7 +399,7 @@ public class SupabaseClient {
     }
 
     public void getNotifications(String childId, int limit, SupabaseCallback<List<Map<String, Object>>> callback) {
-        api.getNotifications(childId, limit).enqueue(new Callback<List<Map<String, Object>>>() {
+        api.getNotifications("eq." + childId, "sent_at.desc", limit).enqueue(new Callback<List<Map<String, Object>>>() {
             @Override
             public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
                 if (response.isSuccessful()) {
@@ -439,7 +439,7 @@ public class SupabaseClient {
     }
 
     public void getBlockedApps(String childId, SupabaseCallback<List<Map<String, Object>>> callback) {
-        api.getBlockedApps(childId).enqueue(new Callback<List<Map<String, Object>>>() {
+        api.getBlockedApps("eq." + childId).enqueue(new Callback<List<Map<String, Object>>>() {
             @Override
             public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
                 if (response.isSuccessful()) {
@@ -530,7 +530,7 @@ public class SupabaseClient {
     }
 
     public void getUnreadAlerts(String childId, SupabaseCallback<List<Map<String, Object>>> callback) {
-        api.getUnreadAlerts(childId).enqueue(new Callback<List<Map<String, Object>>>() {
+        api.getUnreadAlerts("eq." + childId, "eq.false").enqueue(new Callback<List<Map<String, Object>>>() {
             @Override
             public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
                 if (response.isSuccessful()) {
