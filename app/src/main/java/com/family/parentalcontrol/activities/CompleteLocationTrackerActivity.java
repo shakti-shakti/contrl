@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.family.parentalcontrol.R;
 import com.family.parentalcontrol.models.Location;
@@ -120,8 +121,7 @@ public class CompleteLocationTrackerActivity extends AppCompatActivity {
             }
 
             // Add overlays to map
-            android.graphics.drawable.Drawable drawable = android.content.res.ContextCompat.getDrawable(this, R.drawable.ic_location);
-            ItemizedIconOverlay<OverlayItem> overlay = new ItemizedIconOverlay<>(items, drawable,
+            ItemizedIconOverlay.OnItemGestureListener<OverlayItem> gestureListener =
                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                         @Override
                         public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
@@ -135,7 +135,8 @@ public class CompleteLocationTrackerActivity extends AppCompatActivity {
                         public boolean onItemLongPress(final int index, final OverlayItem item) {
                             return false;
                         }
-                    });
+                    };
+            ItemizedIconOverlay<OverlayItem> overlay = new ItemizedIconOverlay<>(items, gestureListener);
 
             mapView.getOverlays().add(overlay);
             mapView.getOverlays().add(pathOverlay);

@@ -16,7 +16,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "Alarm received - triggering scheduled task");
         // restart command service to check pending commands/schedules
-        Intent intent = new Intent(context, com.family.parentalcontrol.services.CommandService.class);
-        context.startService(intent);
+        Intent serviceIntent = new Intent(context, com.family.parentalcontrol.services.CommandService.class);
+        context.startService(serviceIntent);
     }
 }
