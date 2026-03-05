@@ -3,10 +3,12 @@ package com.family.parentalcontrol.services;
 import android.app.Service;
 import android.app.Notification;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.family.parentalcontrol.R;
@@ -26,6 +28,15 @@ public class CameraService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "Camera service created");
+        
+        // Check if camera permission is granted
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) 
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Camera permission not granted, cannot start service");
+            stopSelf();
+            return;
+        }
+        
         startForeground(4, createNotification());
         // Camera initialization deferred until command received
     }

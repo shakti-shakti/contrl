@@ -4,12 +4,14 @@ import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.family.parentalcontrol.R;
@@ -36,6 +38,16 @@ public class CompleteGeofencingService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "Geofencing Service created");
+        
+        // Check if location permission is granted
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) 
+                != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) 
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Location permission not granted, cannot start service");
+            stopSelf();
+            return;
+        }
         
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         handler = new Handler(Looper.getMainLooper());

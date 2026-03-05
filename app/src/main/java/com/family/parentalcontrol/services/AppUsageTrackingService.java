@@ -6,12 +6,14 @@ import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.family.parentalcontrol.R;
@@ -32,6 +34,14 @@ public class AppUsageTrackingService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "AppUsageTrackingService created");
+
+        // Check if app usage stats permission is granted
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.PACKAGE_USAGE_STATS) 
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Package usage stats permission not granted, cannot start service");
+            stopSelf();
+            return;
+        }
 
         usageStatsManager = (UsageStatsManager) getSystemService(Service.USAGE_STATS_SERVICE);
         supabaseClient = SupabaseClient.getInstance(this);

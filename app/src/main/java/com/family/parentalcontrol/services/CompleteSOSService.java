@@ -4,12 +4,14 @@ import android.app.Service;
 import android.app.Notification;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.family.parentalcontrol.R;
@@ -33,6 +35,19 @@ public class CompleteSOSService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "SOS Service created");
+        
+        // Check if required permissions are granted
+        if ((ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) 
+                != PackageManager.PERMISSION_GRANTED) ||
+            (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) 
+                != PackageManager.PERMISSION_GRANTED && 
+             ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) 
+                != PackageManager.PERMISSION_GRANTED)) {
+            Log.w(TAG, "Camera or location permissions not granted, cannot start SOS service");
+            stopSelf();
+            return;
+        }
+        
         handler = new Handler(Looper.getMainLooper());
         supabaseClient = SupabaseClient.getInstance(this);
         startForeground(9, createNotification());
